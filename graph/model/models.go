@@ -7,27 +7,26 @@ import (
 )
 
 type Event struct {
-	ID        string    `json:"id"`
-	DateStart time.Time `json:"dateStart"`
-	DateEnd   time.Time `json:"dateEnd"`
-	Status    bool      `json:"status"`
-	Priority  int       `json:"priority"`
-	Group     int       `json:"group"`
-	EventName string    `json:"eventName"`
-	Text      string    `json:"text"`
-	UserID    string    `json:"userId"`
-	User      *User     `json:"user"`
+	ID          string    `json:"id"`
+	DateStart   time.Time `json:"dateStart"`
+	DateEnd     time.Time `json:"dateEnd"`
+	Status      bool      `json:"status"`
+	Priority    int       `json:"priority"`
+	Group       int       `json:"group"`
+	EventName   string    `json:"eventName"`
+	Description string    `json:"description"`
+	UserID      string    `json:"userId"`
+	User        *User     `json:"user"`
 }
 
 type Mutation struct {
 }
 
 type NewEvent struct {
-	EventName string    `json:"eventName"`
-	Text      string    `json:"text"`
-	DateStart time.Time `json:"dateStart"`
-	DateEnd   time.Time `json:"dateEnd"`
-	UserID    string    `json:"userId"`
+	EventName   string    `json:"eventName"`
+	Description string    `json:"description"`
+	DateStart   time.Time `json:"dateStart"`
+	DateEnd     time.Time `json:"dateEnd"`
 }
 
 type Query struct {

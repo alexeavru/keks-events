@@ -6,51 +6,45 @@ package graph
 
 import (
 	"context"
-	"crypto/rand"
-	"fmt"
-	"math/big"
+	"time"
 
 	"github.com/alexeavru/keks-events/graph/model"
 )
 
-// User is the resolver for the user field.
-func (r *eventResolver) User(ctx context.Context, obj *model.Event) (*model.User, error) {
-	return &model.User{ID: obj.UserID, Name: "user " + obj.UserID}, nil
-}
-
 // CreateEvent is the resolver for the createEvent field.
 func (r *mutationResolver) CreateEvent(ctx context.Context, input model.NewEvent) (*model.Event, error) {
-	randNumber, _ := rand.Int(rand.Reader, big.NewInt(100))
-	event := &model.Event{
-		DateStart: input.DateStart,
-		EventName: input.EventName,
-		Text:      input.Text,
-		ID:        fmt.Sprintf("T%d", randNumber),
-		UserID:    input.UserID,
+	event, err := r.EventsDB.Create(input.EventName, input.Description, input.DateStart.Format(time.RFC3339), input.DateEnd.Format(time.RFC3339))
+	if err != nil {
+		return nil, err
 	}
-	r.events = append(r.events, event)
-	return event, nil
+
+	return &model.Event{
+		ID:          event.ID,
+		EventName:   event.EventName,
+		Description: event.Description,
+		DateStart:   input.DateStart,
+		DateEnd:     input.DateEnd,
+	}, nil
 }
 
 // Events is the resolver for the events field.
 func (r *queryResolver) Events(ctx context.Context) ([]*model.Event, error) {
-	events, err := r.EventsDB.FindAll()
+	eventsDB, err := r.EventsDB.FindAll()
 	if err != nil {
 		return nil, err
 	}
 	var eventsModel []*model.Event
-	for _, event := range events {
+	for _, event := range eventsDB {
 		eventsModel = append(eventsModel, &model.Event{
-			ID:        event.ID,
-			EventName: event.EventName,
-			Text:      event.Text,
+			ID:          event.ID,
+			EventName:   event.EventName,
+			Description: event.Description,
+			DateStart:   ParseTime(event.DateStart),
+			DateEnd:     ParseTime(event.DateEnd),
 		})
 	}
 	return eventsModel, nil
 }
-
-// Event returns EventResolver implementation.
-func (r *Resolver) Event() EventResolver { return &eventResolver{r} }
 
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
@@ -58,6 +52,5 @@ func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
-type eventResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

@@ -8,7 +8,7 @@ type Event {
   priority: Int!
   group: Int!
   eventName: String!
-  text: String!
+  description: String!
   user: User!
 }
 
@@ -23,9 +23,9 @@ type Query {
 
 input NewEvent {
   eventName: String!
-  text: String!
-  userId: String!
+  description: String!
   dateStart: Time!
+  dateEnd: Time!
 }
 
 type Mutation {
