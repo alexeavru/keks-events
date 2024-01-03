@@ -1,10 +1,10 @@
 # KEKS-EVENTS
----
+
 ## Usage
 
 Using `go run`:
 ```shell
-> go run main.go
+> go run server.go
 ```
 Using `go build`:
 ```shell
@@ -14,11 +14,11 @@ Using `go build`:
 You can access the GraphQL playground at: [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
 
 ## Development
-После изменения `graph` обязательно запустить перегенерацию `graphql`
+After making changes to `graph` directory make sure to run the generate command:
 ```
 go generate ./...
 ```
-- Создать событие:
+Create event:
 ```
 mutation createEvent {
   createEvent(input: { 
@@ -36,7 +36,7 @@ mutation createEvent {
 }
 
 ```
-- Выборка всех событий:
+Query all events:
 ```
 query findEvents {
   events {
