@@ -28,6 +28,15 @@ func (r *mutationResolver) CreateEvent(ctx context.Context, input model.NewEvent
 	}, nil
 }
 
+// DeleteEvent is the resolver for the deleteEvent field.
+func (r *mutationResolver) DeleteEvent(ctx context.Context, id string) (bool, error) {
+	status, err := r.EventsDB.Delete(id)
+	if err != nil {
+		return status, err
+	}
+	return status, nil
+}
+
 // Events is the resolver for the events field.
 func (r *queryResolver) Events(ctx context.Context) ([]*model.Event, error) {
 	eventsDB, err := r.EventsDB.FindAll()

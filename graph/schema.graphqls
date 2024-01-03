@@ -30,4 +30,5 @@ input NewEvent {
 
 type Mutation {
   createEvent(input: NewEvent!): Event!
+  deleteEvent(id: String!): Boolean!
 }

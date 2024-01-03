@@ -47,8 +47,14 @@ query findEvents {
     dateEnd
   }
 }
-
 ```
+Delete event:
+```
+mutation deleteEvent {
+  deleteEvent(id: "35042a7e-1ec2-4636-87fb-a22a03467865") 
+}
+```
+
 ## Built with
 
 - [gqlgen](https://github.com/99designs/gqlgen)
