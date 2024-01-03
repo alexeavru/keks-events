@@ -34,7 +34,19 @@ func (r *mutationResolver) CreateEvent(ctx context.Context, input model.NewEvent
 
 // Events is the resolver for the events field.
 func (r *queryResolver) Events(ctx context.Context) ([]*model.Event, error) {
-	return r.events, nil
+	events, err := r.EventsDB.FindAll()
+	if err != nil {
+		return nil, err
+	}
+	var eventsModel []*model.Event
+	for _, event := range events {
+		eventsModel = append(eventsModel, &model.Event{
+			ID:        event.ID,
+			EventName: event.EventName,
+			Text:      event.Text,
+		})
+	}
+	return eventsModel, nil
 }
 
 // Event returns EventResolver implementation.

@@ -44,6 +44,13 @@ go generate ./...
 go run server.go
 
 
+## Создать DB
+sqlite3 events.db
+create table events(id text primary key, event_name text, text text, user_id int, priority int, group int, date_start text, date_end text);
+
+INSERT INTO events VALUES('7915ee64-87cd-4aba-a27e-27fe3759b412', 'Новый год', 'Отпраздновать новый год', '1', '0','0','2023-01-01T00:00:00Z','2023-01-08T23:59:59Z');
+select * from events;
+
 mutation createEvent {
   createEvent(input: { dateStart: "2023-01-02T00:00:00Z", eventName: "First event", text: "Event text", userId: "3" }) {
     user {

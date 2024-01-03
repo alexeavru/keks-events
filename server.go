@@ -1,42 +1,39 @@
 package main
 
 import (
-	"context"
+	"database/sql"
 	"log"
 	"net/http"
 	"os"
-	"testing"
 
-	_ "github.com/mattn/go-sqlite3"
-	"github.com/stretchr/testify/assert"
+	_ "modernc.org/sqlite"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/alexeavru/keks-events/database"
 	"github.com/alexeavru/keks-events/graph"
 )
 
 const defaultPort = "8080"
 
-func EventsCatalog(t *testing.T) {
-	client, err := Open("sqlite3", "file:event-catalog.db?cache=shared&_fk=1")
-
-	assert.NoErrorf(t, err, "failed opening connection to sqlite")
-	defer client.Close()
-
-	ctx := context.Background()
-
-	// Run the automatic migration tool to create all schema resources.
-	err = client.Schema.Create(ctx)
-	assert.NoErrorf(t, err, "failed creating schema resources")
-}
-
 func main() {
+
+	db, err := sql.Open("sqlite", "./events.db")
+	if err != nil {
+		log.Fatalf("failed to open database: %v", err)
+	}
+	defer db.Close()
+
+	eventsDb := database.NewEvent(db)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
+		EventsDB: eventsDb,
+	}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
