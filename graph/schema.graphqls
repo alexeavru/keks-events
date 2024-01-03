@@ -1,0 +1,33 @@
+scalar Time
+
+type Event {
+  id: ID!
+  dateStart: Time!
+  dateEnd: Time!
+  status: Boolean!
+  priority: Int!
+  group: Int!
+  eventName: String!
+  text: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  name: String!
+}
+
+type Query {
+  events: [Event!]!
+}
+
+input NewEvent {
+  eventName: String!
+  text: String!
+  userId: String!
+  dateStart: Time!
+}
+
+type Mutation {
+  createEvent(input: NewEvent!): Event!
+}
