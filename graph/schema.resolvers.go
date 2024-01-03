@@ -8,6 +8,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/alexeavru/keks-events/common"
 	"github.com/alexeavru/keks-events/graph/model"
 )
 
@@ -39,8 +40,8 @@ func (r *queryResolver) Events(ctx context.Context) ([]*model.Event, error) {
 			ID:          event.ID,
 			EventName:   event.EventName,
 			Description: event.Description,
-			DateStart:   ParseTime(event.DateStart),
-			DateEnd:     ParseTime(event.DateEnd),
+			DateStart:   common.ParseTime(event.DateStart),
+			DateEnd:     common.ParseTime(event.DateEnd),
 		})
 	}
 	return eventsModel, nil
