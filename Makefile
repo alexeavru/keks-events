@@ -27,7 +27,7 @@ run: container
 	docker stop $(APP) || true && docker rm $(APP) || true
 	docker run -d --name ${APP} -p ${PORT}:${PORT} --rm \
 		-e "PORT=${PORT}" \
-		-v $(PWD)/events.db:/events.db \
+		-v $(PWD)/events.db:/go/events.db \
 		$(CONTAINER_IMAGE):$(RELEASE)
 
 test:
