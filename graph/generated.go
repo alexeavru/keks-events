@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"sync"
 	"sync/atomic"
-	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -49,14 +48,14 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Event struct {
-		DateEnd     func(childComplexity int) int
-		DateStart   func(childComplexity int) int
 		Description func(childComplexity int) int
-		EventName   func(childComplexity int) int
+		End         func(childComplexity int) int
 		Group       func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Priority    func(childComplexity int) int
+		Start       func(childComplexity int) int
 		Status      func(childComplexity int) int
+		Title       func(childComplexity int) int
 		User        func(childComplexity int) int
 	}
 
@@ -102,20 +101,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "Event.dateEnd":
-		if e.complexity.Event.DateEnd == nil {
-			break
-		}
-
-		return e.complexity.Event.DateEnd(childComplexity), true
-
-	case "Event.dateStart":
-		if e.complexity.Event.DateStart == nil {
-			break
-		}
-
-		return e.complexity.Event.DateStart(childComplexity), true
-
 	case "Event.description":
 		if e.complexity.Event.Description == nil {
 			break
@@ -123,12 +108,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Event.Description(childComplexity), true
 
-	case "Event.eventName":
-		if e.complexity.Event.EventName == nil {
+	case "Event.end":
+		if e.complexity.Event.End == nil {
 			break
 		}
 
-		return e.complexity.Event.EventName(childComplexity), true
+		return e.complexity.Event.End(childComplexity), true
 
 	case "Event.group":
 		if e.complexity.Event.Group == nil {
@@ -151,12 +136,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Event.Priority(childComplexity), true
 
+	case "Event.start":
+		if e.complexity.Event.Start == nil {
+			break
+		}
+
+		return e.complexity.Event.Start(childComplexity), true
+
 	case "Event.status":
 		if e.complexity.Event.Status == nil {
 			break
 		}
 
 		return e.complexity.Event.Status(childComplexity), true
+
+	case "Event.title":
+		if e.complexity.Event.Title == nil {
+			break
+		}
+
+		return e.complexity.Event.Title(childComplexity), true
 
 	case "Event.user":
 		if e.complexity.Event.User == nil {
@@ -462,8 +461,8 @@ func (ec *executionContext) fieldContext_Event_id(ctx context.Context, field gra
 	return fc, nil
 }
 
-func (ec *executionContext) _Event_dateStart(ctx context.Context, field graphql.CollectedField, obj *model.Event) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Event_dateStart(ctx, field)
+func (ec *executionContext) _Event_start(ctx context.Context, field graphql.CollectedField, obj *model.Event) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Event_start(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -476,7 +475,7 @@ func (ec *executionContext) _Event_dateStart(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.DateStart, nil
+		return obj.Start, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -488,26 +487,26 @@ func (ec *executionContext) _Event_dateStart(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(time.Time)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Event_dateStart(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Event_start(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Event",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Event_dateEnd(ctx context.Context, field graphql.CollectedField, obj *model.Event) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Event_dateEnd(ctx, field)
+func (ec *executionContext) _Event_end(ctx context.Context, field graphql.CollectedField, obj *model.Event) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Event_end(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -520,7 +519,7 @@ func (ec *executionContext) _Event_dateEnd(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.DateEnd, nil
+		return obj.End, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -532,19 +531,19 @@ func (ec *executionContext) _Event_dateEnd(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(time.Time)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Event_dateEnd(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Event_end(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Event",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Time does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -682,8 +681,8 @@ func (ec *executionContext) fieldContext_Event_group(ctx context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Event_eventName(ctx context.Context, field graphql.CollectedField, obj *model.Event) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Event_eventName(ctx, field)
+func (ec *executionContext) _Event_title(ctx context.Context, field graphql.CollectedField, obj *model.Event) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Event_title(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -696,7 +695,7 @@ func (ec *executionContext) _Event_eventName(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.EventName, nil
+		return obj.Title, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -713,7 +712,7 @@ func (ec *executionContext) _Event_eventName(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Event_eventName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Event_title(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Event",
 		Field:      field,
@@ -861,18 +860,18 @@ func (ec *executionContext) fieldContext_Mutation_createEvent(ctx context.Contex
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Event_id(ctx, field)
-			case "dateStart":
-				return ec.fieldContext_Event_dateStart(ctx, field)
-			case "dateEnd":
-				return ec.fieldContext_Event_dateEnd(ctx, field)
+			case "start":
+				return ec.fieldContext_Event_start(ctx, field)
+			case "end":
+				return ec.fieldContext_Event_end(ctx, field)
 			case "status":
 				return ec.fieldContext_Event_status(ctx, field)
 			case "priority":
 				return ec.fieldContext_Event_priority(ctx, field)
 			case "group":
 				return ec.fieldContext_Event_group(ctx, field)
-			case "eventName":
-				return ec.fieldContext_Event_eventName(ctx, field)
+			case "title":
+				return ec.fieldContext_Event_title(ctx, field)
 			case "description":
 				return ec.fieldContext_Event_description(ctx, field)
 			case "user":
@@ -991,18 +990,18 @@ func (ec *executionContext) fieldContext_Query_events(ctx context.Context, field
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Event_id(ctx, field)
-			case "dateStart":
-				return ec.fieldContext_Event_dateStart(ctx, field)
-			case "dateEnd":
-				return ec.fieldContext_Event_dateEnd(ctx, field)
+			case "start":
+				return ec.fieldContext_Event_start(ctx, field)
+			case "end":
+				return ec.fieldContext_Event_end(ctx, field)
 			case "status":
 				return ec.fieldContext_Event_status(ctx, field)
 			case "priority":
 				return ec.fieldContext_Event_priority(ctx, field)
 			case "group":
 				return ec.fieldContext_Event_group(ctx, field)
-			case "eventName":
-				return ec.fieldContext_Event_eventName(ctx, field)
+			case "title":
+				return ec.fieldContext_Event_title(ctx, field)
 			case "description":
 				return ec.fieldContext_Event_description(ctx, field)
 			case "user":
@@ -3011,20 +3010,20 @@ func (ec *executionContext) unmarshalInputNewEvent(ctx context.Context, obj inte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"eventName", "description", "dateStart", "dateEnd"}
+	fieldsInOrder := [...]string{"title", "description", "start", "end"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "eventName":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("eventName"))
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
 			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.EventName = data
+			it.Title = data
 		case "description":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
 			data, err := ec.unmarshalNString2string(ctx, v)
@@ -3032,20 +3031,20 @@ func (ec *executionContext) unmarshalInputNewEvent(ctx context.Context, obj inte
 				return it, err
 			}
 			it.Description = data
-		case "dateStart":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dateStart"))
-			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+		case "start":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("start"))
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.DateStart = data
-		case "dateEnd":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dateEnd"))
-			data, err := ec.unmarshalNTime2timeᚐTime(ctx, v)
+			it.Start = data
+		case "end":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("end"))
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.DateEnd = data
+			it.End = data
 		}
 	}
 
@@ -3076,13 +3075,13 @@ func (ec *executionContext) _Event(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "dateStart":
-			out.Values[i] = ec._Event_dateStart(ctx, field, obj)
+		case "start":
+			out.Values[i] = ec._Event_start(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "dateEnd":
-			out.Values[i] = ec._Event_dateEnd(ctx, field, obj)
+		case "end":
+			out.Values[i] = ec._Event_end(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -3101,8 +3100,8 @@ func (ec *executionContext) _Event(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "eventName":
-			out.Values[i] = ec._Event_eventName(ctx, field, obj)
+		case "title":
+			out.Values[i] = ec._Event_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -3752,21 +3751,6 @@ func (ec *executionContext) unmarshalNString2string(ctx context.Context, v inter
 
 func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	res := graphql.MarshalString(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
-	res, err := graphql.UnmarshalTime(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
-	res := graphql.MarshalTime(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")

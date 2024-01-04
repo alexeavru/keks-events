@@ -22,36 +22,42 @@ Create event:
 ```
 mutation createEvent {
   createEvent(input: { 
-    dateStart: "2023-01-07T00:00:00Z", 
-    dateEnd: "2023-01-07T23:59:59Z", 
-    eventName: "Рождество", 
+    start: "2024-01-07T00:00:00", 
+    end: "2024-01-07T23:59:59", 
+    title: "Рождество", 
     description: "Отпраздновать рождество" 
     }) 
   {
-    dateStart
-    dateEnd
-    eventName
+    start
+    end
+    title
     description
   }
 }
-
 ```
 Query all events:
 ```
 query findEvents {
   events {
     id
-    eventName
+    title
     description
-    dateStart
-    dateEnd
+    start
+    end
   }
 }
+
+curl -s 'http://localhost:8080/query' \
+  -X POST \
+  -H 'content-type: application/json' \
+  --data '{
+    "query":"query findEvents { events { id title description start end } }", "operationName":"findEvents"
+  }' | jq
 ```
 Delete event:
 ```
 mutation deleteEvent {
-  deleteEvent(id: "35042a7e-1ec2-4636-87fb-a22a03467865") 
+  deleteEvent(id: "5256355a-71cc-4859-aa7e-b97b8600ed7c") 
 }
 ```
 

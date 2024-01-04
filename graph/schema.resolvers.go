@@ -6,25 +6,23 @@ package graph
 
 import (
 	"context"
-	"time"
 
-	"github.com/alexeavru/keks-events/common"
 	"github.com/alexeavru/keks-events/graph/model"
 )
 
 // CreateEvent is the resolver for the createEvent field.
 func (r *mutationResolver) CreateEvent(ctx context.Context, input model.NewEvent) (*model.Event, error) {
-	event, err := r.EventsDB.Create(input.EventName, input.Description, input.DateStart.Format(time.RFC3339), input.DateEnd.Format(time.RFC3339))
+	event, err := r.EventsDB.Create(input.Title, input.Description, input.Start, input.End)
 	if err != nil {
 		return nil, err
 	}
 
 	return &model.Event{
 		ID:          event.ID,
-		EventName:   event.EventName,
+		Title:       event.EventName,
 		Description: event.Description,
-		DateStart:   input.DateStart,
-		DateEnd:     input.DateEnd,
+		Start:       input.Start,
+		End:         input.End,
 	}, nil
 }
 
@@ -47,10 +45,10 @@ func (r *queryResolver) Events(ctx context.Context) ([]*model.Event, error) {
 	for _, event := range eventsDB {
 		eventsModel = append(eventsModel, &model.Event{
 			ID:          event.ID,
-			EventName:   event.EventName,
+			Title:       event.EventName,
 			Description: event.Description,
-			DateStart:   common.ParseTime(event.DateStart),
-			DateEnd:     common.ParseTime(event.DateEnd),
+			Start:       event.DateStart,
+			End:         event.DateEnd,
 		})
 	}
 	return eventsModel, nil

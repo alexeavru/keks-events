@@ -2,31 +2,27 @@
 
 package model
 
-import (
-	"time"
-)
-
 type Event struct {
-	ID          string    `json:"id"`
-	DateStart   time.Time `json:"dateStart"`
-	DateEnd     time.Time `json:"dateEnd"`
-	Status      bool      `json:"status"`
-	Priority    int       `json:"priority"`
-	Group       int       `json:"group"`
-	EventName   string    `json:"eventName"`
-	Description string    `json:"description"`
-	UserID      string    `json:"userId"`
-	User        *User     `json:"user"`
+	ID          string `json:"id"`
+	Start       string `json:"start"`
+	End         string `json:"end"`
+	Status      bool   `json:"status"`
+	Priority    int    `json:"priority"`
+	Group       int    `json:"group"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	UserID      string `json:"userId"`
+	User        *User  `json:"user"`
 }
 
 type Mutation struct {
 }
 
 type NewEvent struct {
-	EventName   string    `json:"eventName"`
-	Description string    `json:"description"`
-	DateStart   time.Time `json:"dateStart"`
-	DateEnd     time.Time `json:"dateEnd"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Start       string `json:"start"`
+	End         string `json:"end"`
 }
 
 type Query struct {
