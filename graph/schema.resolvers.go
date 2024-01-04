@@ -6,6 +6,7 @@ package graph
 
 import (
 	"context"
+	"log"
 
 	"github.com/alexeavru/keks-events/graph/model"
 )
@@ -16,6 +17,8 @@ func (r *mutationResolver) CreateEvent(ctx context.Context, input model.NewEvent
 	if err != nil {
 		return nil, err
 	}
+
+	log.Printf("Create New Event ID: %s", event.ID)
 
 	return &model.Event{
 		ID:          event.ID,
@@ -32,6 +35,7 @@ func (r *mutationResolver) DeleteEvent(ctx context.Context, id string) (bool, er
 	if err != nil {
 		return status, err
 	}
+	log.Printf("Delete event ID: %s", id)
 	return status, nil
 }
 
@@ -51,6 +55,7 @@ func (r *queryResolver) Events(ctx context.Context) ([]*model.Event, error) {
 			End:         event.DateEnd,
 		})
 	}
+	log.Printf("Get All Events")
 	return eventsModel, nil
 }
 
