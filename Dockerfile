@@ -1,7 +1,8 @@
 FROM golang:alpine3.19
+ENV PORT=8080
 
 RUN apk add --no-cache alpine-conf && \
     setup-timezone -z Europe/Moscow
 
-COPY keksevents /
-CMD ["/keksevents"]
+COPY keksevents .env ./
+CMD ["./keksevents"]

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 	"os"
@@ -10,31 +9,39 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/alexeavru/keks-events/auth"
 	"github.com/alexeavru/keks-events/database"
 	"github.com/alexeavru/keks-events/graph"
 	"github.com/go-chi/chi"
+	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 )
 
-const defaultPort = "8080"
+const defaultPort = "8088"
+
+// init is invoked before main()
+func init() {
+	// loads values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+}
 
 func main() {
 
-	db, err := sql.Open("sqlite", "./events.db")
-	if err != nil {
-		log.Fatalf("failed to open database: %v", err)
-	}
-	defer db.Close()
-
-	eventsDb := database.NewEvent(db)
+	database.InitDB()
+	eventsDb := database.NewEvent(database.Db)
+	defer database.CloseDB()
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
 
-	// Enable CORS Support
 	router := chi.NewRouter()
+	// Add Auth
+	router.Use(auth.Middleware())
+	// Enable CORS Support
 	router.Use(cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost},
@@ -48,6 +55,7 @@ func main() {
 
 	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
+	router.HandleFunc("/login", auth.CreateTokenEndpoint)
 
 	log.Printf("Starting KEKS-events server ...")
 	log.Printf("connect to http://0.0.0.0:%s/ for GraphQL playground", port)
