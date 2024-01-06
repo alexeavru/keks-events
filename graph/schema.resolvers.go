@@ -8,8 +8,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/alexeavru/keks-events/auth"
 	"github.com/alexeavru/keks-events/graph/model"
+	"github.com/alexeavru/keks-events/internal/auth"
 )
 
 // CreateEvent is the resolver for the createEvent field.

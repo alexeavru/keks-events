@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/alexeavru/keks-events/users"
+	"github.com/alexeavru/keks-events/internal/users"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/mitchellh/mapstructure"
 )
@@ -33,8 +33,14 @@ func Middleware() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-			// Skip check bearer token for /login page
-			if r.RequestURI == "/login" {
+			// Skip check bearer token for this pages
+			routeList := map[string]bool{
+				"/login":   true,
+				"/healthz": true,
+				"/readyz":  true,
+			}
+
+			if routeList[r.RequestURI] {
 				next.ServeHTTP(w, r)
 				return
 			}

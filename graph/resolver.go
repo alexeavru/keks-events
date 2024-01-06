@@ -1,7 +1,7 @@
 package graph
 
 import (
-	"github.com/alexeavru/keks-events/database"
+	"github.com/alexeavru/keks-events/internal/database"
 )
 
 //go:generate go run github.com/99designs/gqlgen generate

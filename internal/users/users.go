@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/alexeavru/keks-events/database"
+	"github.com/alexeavru/keks-events/internal/database"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -44,7 +44,7 @@ func CheckPassword(username string, password string) (bool, error) {
 
 // GetUserIdByUsername check if a user exists in database by given username
 func GetUserIdByUsername(username string) (int, error) {
-	statement, err := database.Db.Prepare("select ID from users WHERE Username = ?")
+	statement, err := database.Db.Prepare("select ID from users WHERE name = ?")
 	if err != nil {
 		log.Fatal(err)
 	}
