@@ -2,9 +2,9 @@ PROJECT?=keks-events
 APP?=keksevents
 PORT?=8080
 
-RELEASE?=v0.0.1
+RELEASE?=v0.0.2
 COMMIT?=$(shell git rev-parse --short HEAD)
-BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
+BUILD_TIME?=$(shell date '+%Y-%m-%d_%H:%M:%S')
 CONTAINER_IMAGE?=alexeav/${APP}
 
 GOOS?=linux
@@ -15,8 +15,9 @@ clean:
 
 build: clean
 	CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${GOARCH} go build \
-		-ldflags "-s -w -X ${PROJECT}/version.Release=${RELEASE} \
-		-X ${PROJECT}/version.Commit=${COMMIT} -X ${PROJECT}/version.BuildTime=${BUILD_TIME}" \
+		-ldflags "-s -w -X github.com/alexeavru/${PROJECT}/internal/version.Release=${RELEASE} \
+		-X github.com/alexeavru/${PROJECT}/internal/version.Commit=${COMMIT} \
+		-X github.com/alexeavru/${PROJECT}/internal/version.BuildTime=${BUILD_TIME}" \
 		-o ${APP}
 
 container: build
