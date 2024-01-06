@@ -17,8 +17,6 @@ func (r *mutationResolver) CreateEvent(ctx context.Context, input model.NewEvent
 	// Get UserID from context
 	rawCtx := auth.ForContext(ctx)
 
-	println("EAV: ", rawCtx.UserID)
-
 	event, err := r.EventsDB.Create(input, rawCtx.UserID)
 	if err != nil {
 		return nil, err
@@ -28,7 +26,7 @@ func (r *mutationResolver) CreateEvent(ctx context.Context, input model.NewEvent
 
 	return &model.Event{
 		ID:          event.ID,
-		Title:       event.EventName,
+		Title:       event.Title,
 		Description: event.Description,
 		Start:       input.Start,
 		End:         input.End,
@@ -79,10 +77,10 @@ func (r *queryResolver) Events(ctx context.Context) ([]*model.Event, error) {
 	for _, event := range eventsDB {
 		eventsModel = append(eventsModel, &model.Event{
 			ID:          event.ID,
-			Title:       event.EventName,
+			Title:       event.Title,
 			Description: event.Description,
-			Start:       event.DateStart,
-			End:         event.DateEnd,
+			Start:       event.Start,
+			End:         event.End,
 		})
 	}
 	log.Printf("Get All Events")
