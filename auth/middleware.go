@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/alexeavru/keks-events/users"
@@ -54,10 +55,11 @@ func Middleware() func(http.Handler) http.Handler {
 				return
 			}
 
+			// Get User ID by username
+			user_id, _ := users.GetUserIdByUsername(username.(User).Username)
 			// Put user in context from token
 			user := User{}
-			// Тут нужно добавить выборку ID юзера из базы по username из токена
-			user.UserID = "1"
+			user.UserID = strconv.Itoa(user_id)
 			user.Username = username.(User).Username
 
 			// put it in context

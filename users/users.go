@@ -42,6 +42,26 @@ func CheckPassword(username string, password string) (bool, error) {
 	return false, err
 }
 
+// GetUserIdByUsername check if a user exists in database by given username
+func GetUserIdByUsername(username string) (int, error) {
+	statement, err := database.Db.Prepare("select ID from users WHERE Username = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	row := statement.QueryRow(username)
+
+	var Id int
+	err = row.Scan(&Id)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			log.Print(err)
+		}
+		return 0, err
+	}
+
+	return Id, nil
+}
+
 // HashPassword hashes given password
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)

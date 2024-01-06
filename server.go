@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync/atomic"
 
 	_ "modernc.org/sqlite"
 
@@ -49,6 +50,9 @@ func main() {
 		Debug:            false,
 	}).Handler)
 
+	isReady := &atomic.Value{}
+	isReady.Store(false)
+
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
 		EventsDB: eventsDb,
 	}}))
@@ -56,6 +60,8 @@ func main() {
 	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
 	router.HandleFunc("/login", auth.CreateTokenEndpoint)
+	router.HandleFunc("/healthz", handlers.healthz)
+	router.HandleFunc("/readyz", handlers.readyz(isReady))
 
 	log.Printf("Starting KEKS-events server ...")
 	log.Printf("connect to http://0.0.0.0:%s/ for GraphQL playground", port)
