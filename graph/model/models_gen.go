@@ -14,6 +14,10 @@ type Event struct {
 	User        *User  `json:"user"`
 }
 
+type GetEvent struct {
+	ID string `json:"id"`
+}
+
 type Mutation struct {
 }
 

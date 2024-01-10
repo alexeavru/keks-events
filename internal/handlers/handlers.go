@@ -19,15 +19,16 @@ func Router(srv *handler.Server) chi.Router {
 	isReady.Store(false)
 
 	router := chi.NewRouter()
-	// Add Auth
-	router.Use(auth.Middleware())
 	// Enable CORS Support
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedHeaders:   []string{"*"},
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost},
 		AllowCredentials: true,
 		Debug:            false,
 	}).Handler)
+	// Add Auth
+	router.Use(auth.Middleware())
 
 	// Set readyz probe is positive
 	isReady.Store(true)

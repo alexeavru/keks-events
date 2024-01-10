@@ -88,6 +88,30 @@ func (r *queryResolver) Events(ctx context.Context) ([]*model.Event, error) {
 	return eventsModel, nil
 }
 
+// EventsByID is the resolver for the eventsById field.
+func (r *queryResolver) EventsByID(ctx context.Context, input model.GetEvent) ([]*model.Event, error) {
+	// Get UserID from context
+	rawCtx := auth.ForContext(ctx)
+
+	eventsDB, err := r.EventsDB.GetEventById(rawCtx.UserID, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	var eventsModel []*model.Event
+	for _, event := range eventsDB {
+		eventsModel = append(eventsModel, &model.Event{
+			ID:          event.ID,
+			Title:       event.Title,
+			Description: event.Description,
+			Start:       event.Start,
+			End:         event.End,
+		})
+	}
+	log.Printf("Get Event by ID: %s", input.ID)
+	return eventsModel, nil
+}
+
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 

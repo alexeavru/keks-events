@@ -63,6 +63,26 @@ curl -s -X POST 'http://localhost:8080/query' \
     "query":"query findEvents { events { id title description start end } }", "operationName":"findEvents"
   }' | jq
 ```
+Get event by ID:
+```
+query eventsById {
+  eventsById(input: { id: "50380f2c-1e71-4409-853e-826e30a81409"} ) {
+        id
+        title
+        description
+        start
+        end
+  }
+}
+
+curl -s -X POST 'http://localhost:8080/query' \
+ -H 'Content-Type: application/json' \
+ -H 'Authorization: Bearer xxx' \
+  --data '{
+    "query":"query eventsById { eventsById(input: {id : \"50380f2c-1e71-4409-853e-826e30a81409\"}) { id title description start end } }", 
+    "operationName":"eventsById"
+  }' | jq
+```
 Update event:
 ```
 mutation updateEvent {

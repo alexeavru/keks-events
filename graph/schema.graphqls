@@ -1,5 +1,3 @@
-scalar Time
-
 type Event {
   id: ID!
   start: String!
@@ -19,6 +17,7 @@ type User {
 
 type Query {
   events: [Event!]!
+  eventsById(input: GetEvent!): [Event!]!
 }
 
 input NewEvent {
@@ -34,6 +33,10 @@ input UpdateEvent {
   description: String!
   start: String!
   end: String!
+}
+
+input GetEvent {
+  id: String!
 }
 
 type Mutation {

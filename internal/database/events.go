@@ -74,6 +74,31 @@ func (c *EventDB) FindAll(user_id string) ([]EventDB, error) {
 	return events, nil
 }
 
+func (c *EventDB) GetEventById(user_id string, event_id string) ([]EventDB, error) {
+	rows, err := c.db.Query("SELECT id, title, description, start, \"end\" FROM events WHERE user_id = $1 and id = $2", user_id, event_id)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	events := []EventDB{}
+
+	for rows.Next() {
+		var id, title, description, start, end string
+		err := rows.Scan(&id, &title, &description, &start, &end)
+		if err != nil {
+			if err != sql.ErrNoRows {
+				log.Print(err)
+			}
+			return nil, err
+		}
+
+		events = append(events, EventDB{ID: id, Title: title, Description: description, Start: start, End: end})
+	}
+
+	return events, nil
+}
+
 func (c *EventDB) Create(input model.NewEvent, user_id string) (EventDB, error) {
 	id := uuid.New().String()
 	//=====================================

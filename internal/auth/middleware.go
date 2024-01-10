@@ -47,7 +47,7 @@ func Middleware() func(http.Handler) http.Handler {
 
 			header := r.Header.Get("Authorization")
 
-			// Allow unauthenticated users in
+			// Disable unauthenticated users in
 			if header == "" {
 				http.Error(w, "Authorization token must be present", http.StatusForbidden)
 				return
