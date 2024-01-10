@@ -44,22 +44,23 @@ func CheckPassword(username string, password string) (bool, error) {
 
 // GetUserIdByUsername check if a user exists in database by given username
 func GetUserIdByUsername(username string) (int, error) {
-	statement, err := database.Db.Prepare("select ID from users WHERE name = ?")
+	row, err := database.Db.Query("select id from users WHERE name = $1", username)
 	if err != nil {
 		log.Fatal(err)
 	}
-	row := statement.QueryRow(username)
 
-	var Id int
-	err = row.Scan(&Id)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			log.Print(err)
+	var id int
+	for row.Next() {
+		err = row.Scan(&id)
+		if err != nil {
+			if err != sql.ErrNoRows {
+				log.Print(err)
+			}
+			return 0, err
 		}
-		return 0, err
 	}
 
-	return Id, nil
+	return id, nil
 }
 
 // HashPassword hashes given password

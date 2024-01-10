@@ -73,6 +73,7 @@ func (r *queryResolver) Events(ctx context.Context) ([]*model.Event, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var eventsModel []*model.Event
 	for _, event := range eventsDB {
 		eventsModel = append(eventsModel, &model.Event{

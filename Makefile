@@ -28,8 +28,11 @@ run: container
 	docker stop $(APP) || true && docker rm $(APP) || true
 	docker run -d --name ${APP} -p ${PORT}:${PORT} --rm \
 		-e "PORT=${PORT}" \
-		-v $(PWD)/events.db:/go/events.db \
 		$(CONTAINER_IMAGE):$(RELEASE)
+
+compose: container
+	docker compose kill keks-event
+	KEKS_EVENTS_VER=$(RELEASE) docker compose up -d
 
 test:
 	go test -v -race ./...
