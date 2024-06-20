@@ -94,6 +94,13 @@ mutation updateEvent {
     description
     }
 }
+
+curl -s -X POST 'http://localhost:8080/query' \
+ -H 'Content-Type: application/json' \
+ -H 'Authorization: Bearer xxx' \
+--data '{
+    "query":"mutation updateEvent { updateEvent(input: { id : \"ef46c372-bc3d-49c9-a8b2-1bd1064653a0\", start: \"2024-06-08\", end: \"2024-06-09\", title: \"New\", description: \"New description\"}) { start end title description } }", "operationName":"updateEvent"
+}' \ jq
 ```
 Delete event:
 ```
@@ -112,4 +119,3 @@ curl -s -X POST 'http://localhost:8080/query' \
 ## Built with
 
 - [gqlgen](https://github.com/99designs/gqlgen)
-- [sqlite](https://gitlab.com/cznic/sqlite)

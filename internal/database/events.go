@@ -115,7 +115,7 @@ func (c *EventDB) Create(input model.NewEvent, user_id string) (EventDB, error) 
 }
 
 func (c *EventDB) Update(input model.UpdateEvent, user_id string) (EventDB, error) {
-	_, err := c.db.Exec("UPDATE events SET title = $2, description = $3, start = $4, end = $4 WHERE id = $1",
+	_, err := c.db.Exec("UPDATE events SET title = $2, description = $3, start = $4, \"end\" = $5 WHERE id = $1",
 		input.ID, input.Title, input.Description, input.Start, input.End)
 	if err != nil {
 		return EventDB{}, err
